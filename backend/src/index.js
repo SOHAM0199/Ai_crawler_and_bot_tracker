@@ -65,10 +65,18 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', ts: Date.now() });
 });
 
+// ─── 404 Catch-All Handler ───────────────────────────────────────────────────
+app.use((req, res) => {
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.status(404).json({ error: `Endpoint not found: ${req.method} ${req.originalUrl}` });
+});
+
 // ─── Error handler ─────────────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  const origin = req.headers.origin;
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   console.error('Unhandled server error:', err);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
