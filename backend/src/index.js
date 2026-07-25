@@ -19,34 +19,23 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+// 1. CORS headers (must be first before helmet or body parsers)
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+  next();
+});
+
+app.use(cors({ origin: true, credentials: true }));
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(compression());
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like server-to-server or curl) or matching origins
-      if (!origin) return callback(null, true);
-      const allowedOrigins = [
-        process.env.FRONTEND_URL,
-        'https://ai-crawler-and-bot-tracker.onrender.com',
-        'http://localhost:5173',
-        'http://localhost:3000',
-      ].filter(Boolean);
-
-      if (
-        allowedOrigins.includes(origin) ||
-        origin.endsWith('.onrender.com') ||
-        process.env.NODE_ENV !== 'production'
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-  })
-);
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10gb' }));
 app.use(express.urlencoded({ limit: '10gb', extended: true }));
