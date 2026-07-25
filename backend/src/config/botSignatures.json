@@ -1,0 +1,178 @@
+[
+  {
+    "name": "GPTBot",
+    "group": "OpenAI",
+    "category": "AI Training",
+    "description": "OpenAI training crawler",
+    "patterns": ["GPTBot"],
+    "refs": ["https://platform.openai.com/docs/gptbot"]
+  },
+  {
+    "name": "ChatGPT-User",
+    "group": "OpenAI",
+    "category": "AI Search",
+    "description": "ChatGPT browsing plugin (user-initiated)",
+    "patterns": ["ChatGPT-User"],
+    "refs": ["https://platform.openai.com/docs/plugins/bot"]
+  },
+  {
+    "name": "OAI-SearchBot",
+    "group": "OpenAI",
+    "category": "AI Search",
+    "description": "OpenAI search crawler",
+    "patterns": ["OAI-SearchBot"],
+    "refs": []
+  },
+  {
+    "name": "Googlebot",
+    "group": "Google",
+    "category": "Search Engine",
+    "description": "Google web indexing crawler",
+    "patterns": ["Googlebot"],
+    "refs": ["https://developers.google.com/search/docs/crawling-indexing/googlebot"]
+  },
+  {
+    "name": "Google-Extended",
+    "group": "Google",
+    "category": "AI Training",
+    "description": "Google AI training crawler (Bard/Gemini)",
+    "patterns": ["Google-Extended"],
+    "refs": ["https://developers.google.com/search/docs/crawling-indexing/google-extended"]
+  },
+  {
+    "name": "GoogleOther",
+    "group": "Google",
+    "category": "Utility Crawler",
+    "description": "Google miscellaneous crawler",
+    "patterns": ["GoogleOther"],
+    "refs": []
+  },
+  {
+    "name": "Bingbot",
+    "group": "Microsoft",
+    "category": "Search Engine",
+    "description": "Microsoft Bing search crawler",
+    "patterns": ["bingbot"],
+    "refs": ["https://www.bing.com/webmasters/help/which-crawlers-does-bing-use-8a184e9c"]
+  },
+  {
+    "name": "AdIdxBot",
+    "group": "Microsoft",
+    "category": "Ad Crawler",
+    "description": "Bing Ads crawler",
+    "patterns": ["adidxbot"],
+    "refs": []
+  },
+  {
+    "name": "ClaudeBot",
+    "group": "Anthropic",
+    "category": "AI Training",
+    "description": "Anthropic Claude AI training crawler",
+    "patterns": ["ClaudeBot", "anthropic-ai"],
+    "refs": ["https://support.anthropic.com/en/articles/8896518-does-anthropic-crawl-the-web"]
+  },
+  {
+    "name": "PerplexityBot",
+    "group": "Perplexity",
+    "category": "AI Search",
+    "description": "Perplexity AI search crawler",
+    "patterns": ["PerplexityBot"],
+    "refs": []
+  },
+  {
+    "name": "CCBot",
+    "group": "Common Crawl",
+    "category": "AI / Web Archiver",
+    "description": "Common Crawl open web archive",
+    "patterns": ["CCBot"],
+    "refs": ["https://commoncrawl.org/faq/"]
+  },
+  {
+    "name": "Applebot",
+    "group": "Apple",
+    "category": "Search Engine",
+    "description": "Apple Siri / Spotlight crawler",
+    "patterns": ["Applebot"],
+    "refs": ["https://support.apple.com/en-us/111946"]
+  },
+  {
+    "name": "DuckDuckBot",
+    "group": "DuckDuckGo",
+    "category": "Search Engine",
+    "description": "DuckDuckGo search crawler",
+    "patterns": ["DuckDuckBot"],
+    "refs": []
+  },
+  {
+    "name": "Slurp",
+    "group": "Yahoo",
+    "category": "Search Engine",
+    "description": "Yahoo Slurp search crawler",
+    "patterns": ["Slurp"],
+    "refs": []
+  },
+  {
+    "name": "YandexBot",
+    "group": "Yandex",
+    "category": "Search Engine",
+    "description": "Yandex search crawler",
+    "patterns": ["YandexBot"],
+    "refs": []
+  },
+  {
+    "name": "Bytespider",
+    "group": "ByteDance",
+    "category": "AI Training",
+    "description": "TikTok / ByteDance crawler",
+    "patterns": ["Bytespider"],
+    "refs": []
+  },
+  {
+    "name": "AhrefsBot",
+    "group": "Ahrefs",
+    "category": "SEO Tool",
+    "description": "Ahrefs SEO tool crawler",
+    "patterns": ["AhrefsBot"],
+    "refs": []
+  },
+  {
+    "name": "SemrushBot",
+    "group": "Semrush",
+    "category": "SEO Tool",
+    "description": "SEMrush SEO tool crawler",
+    "patterns": ["SemrushBot"],
+    "refs": []
+  },
+  {
+    "name": "MJ12bot",
+    "group": "Majestic",
+    "category": "SEO Tool",
+    "description": "Majestic SEO crawler",
+    "patterns": ["MJ12bot"],
+    "refs": []
+  },
+  {
+    "name": "FacebookExternalHit",
+    "group": "Meta",
+    "category": "Social Media",
+    "description": "Facebook Open Graph link preview",
+    "patterns": ["facebookexternalhit"],
+    "refs": []
+  },
+  {
+    "name": "Twitterbot",
+    "group": "Twitter/X",
+    "category": "Social Media",
+    "description": "Twitter card preview crawler",
+    "patterns": ["Twitterbot"],
+    "refs": []
+  },
+  {
+    "name": "LinkedInBot",
+    "group": "LinkedIn",
+    "category": "Social Media",
+    "description": "LinkedIn link preview crawler",
+    "patterns": ["LinkedInBot"],
+    "refs": []
+  }
+]
