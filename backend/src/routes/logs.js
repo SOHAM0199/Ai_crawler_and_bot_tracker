@@ -50,6 +50,18 @@ router.options('/upload', (req, res) => {
   res.status(204).end();
 });
 
+// GET /api/projects/:projectId/logs/upload (Endpoint Info)
+router.get('/upload', (req, res) => {
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.json({
+    endpoint: `/api/projects/${req.params.projectId}/logs/upload`,
+    method: 'POST',
+    status: 'active',
+    instruction: 'Send a POST request with multipart/form-data payload containing file field "logfile"'
+  });
+});
+
 // POST /api/projects/:projectId/logs/upload
 router.post('/upload', (req, res) => {
   const origin = req.headers.origin;
