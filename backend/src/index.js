@@ -19,22 +19,21 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-// 1. CORS headers (must be first before helmet or body parsers)
+// Universal bulletproof CORS middleware (echoes origin, handles preflight OPTIONS 200 OK)
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Range');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Range, Content-Disposition');
 
   if (req.method === 'OPTIONS') {
-    return res.status(204).end();
+    return res.status(200).send('OK');
   }
   next();
 });
 
-app.use(cors({ origin: true, credentials: true }));
-app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(compression());
 app.use(morgan('dev'));
 app.use(express.json({ limit: '10gb' }));
