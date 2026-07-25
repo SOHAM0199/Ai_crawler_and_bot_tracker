@@ -58,7 +58,10 @@ app.get('/api/health', (req, res) => {
 
 // ─── Error handler ─────────────────────────────────────────────────────────────
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  console.error('Unhandled server error:', err);
   res.status(err.status || 500).json({ error: err.message || 'Internal server error' });
 });
 

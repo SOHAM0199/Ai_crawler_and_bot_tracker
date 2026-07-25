@@ -9,53 +9,83 @@ const db = require('../db/database');
 const { ingestLogFile } = require('../services/logIngestion');
 
 const UPLOAD_DIR = process.env.UPLOAD_DIR || './data/uploads';
-if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+} catch (e) {
+  console.error('Failed to create UPLOAD_DIR:', e);
+}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const dir = path.join(UPLOAD_DIR, `project_${req.params.projectId}`);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    try {
+      const pid = req.params.projectId || 'default';
+      const dir = path.join(UPLOAD_DIR, `project_${pid}`);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      cb(null, dir);
+    } catch (e) {
+      cb(e);
+    }
   },
   filename: (req, file, cb) => {
     const timestamp = Date.now();
-    cb(null, `${timestamp}_${file.originalname}`);
+    const safeName = (file.originalname || 'logfile').replace(/[^a-zA-Z0-9_.-]/g, '_');
+    cb(null, `${timestamp}_${safeName}`);
   },
 });
 
 const upload = multer({
   storage,
-  // No fileSize limit - files of any size (1GB, 10GB, unlimited) are accepted
   fileFilter: (req, file, cb) => {
-    const allowed = ['.log', '.gz', '.txt', '.csv'];
-    const ext = path.extname(file.originalname).toLowerCase();
-    if (allowed.includes(ext) || ext === '') cb(null, true);
-    else cb(null, true); // Allow all file extensions
+    cb(null, true);
   },
 });
 
+// Explicit OPTIONS preflight for upload endpoint
+router.options('/upload', (req, res) => {
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.status(204).end();
+});
+
 // POST /api/projects/:projectId/logs/upload
-router.post('/upload', upload.single('logfile'), async (req, res) => {
-  try {
-    const { projectId } = req.params;
-    const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectId);
-    if (!project) return res.status(404).json({ error: 'Project not found' });
+router.post('/upload', (req, res) => {
+  const origin = req.headers.origin;
+  res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  upload.single('logfile')(req, res, async (err) => {
+    if (err) {
+      console.error('Multer file upload error:', err);
+      return res.status(400).json({ error: err.message || 'File upload error' });
+    }
 
-    const format = req.body.format || null; // allow override; null = auto-detect
+    try {
+      const { projectId } = req.params;
+      const project = db.prepare('SELECT * FROM projects WHERE id = ?').get(projectId);
+      if (!project) {
+        return res.status(404).json({ error: `Project #${projectId} not found` });
+      }
 
-    const result = await ingestLogFile(+projectId, req.file.path, format);
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+      }
 
-    res.json({
-      success: true,
-      filename: req.file.originalname,
-      ...result,
-    });
-  } catch (err) {
-    console.error('Upload error:', err);
-    res.status(500).json({ error: err.message });
-  }
+      const format = req.body.format || null;
+      const result = await ingestLogFile(+projectId, req.file.path, format);
+
+      res.json({
+        success: true,
+        filename: req.file.originalname,
+        ...result,
+      });
+    } catch (ingestErr) {
+      console.error('Ingestion processing error:', ingestErr);
+      res.status(500).json({ error: ingestErr.message || 'Error processing log file' });
+    }
+  });
 });
 
 // GET /api/projects/:projectId/logs

@@ -28,7 +28,8 @@ ChartJS.register(
   Filler
 );
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const RAW_API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+const API_BASE_URL = RAW_API_URL.replace(/\/+$/, '');
 
 const BOT_COLORS = ['#2dd4bf', '#5b9dd9', '#f0b429', '#b48cf0', '#f0554d', '#4ade80', '#f97316', '#94a3b8', '#e879f9', '#38bdf8'];
 
