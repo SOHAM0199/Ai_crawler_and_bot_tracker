@@ -75,8 +75,9 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-const server = app.listen(PORT, () => {
-  console.log(`\n🚀 Crawler Watch backend running on http://localhost:${PORT}`);
+const HOST = '0.0.0.0';
+const server = app.listen(PORT, HOST, () => {
+  console.log(`\n🚀 Crawler Watch backend running on http://${HOST}:${PORT}`);
   console.log(`   DB: ${process.env.DB_PATH || './data/crawler-watch.db'}`);
 
   // Start scheduled cron (only if enabled)
