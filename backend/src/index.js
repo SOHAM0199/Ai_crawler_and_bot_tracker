@@ -45,6 +45,16 @@ app.use('/api/projects/:projectId/logs', logsRouter);
 app.use('/api/projects/:projectId/analytics', analyticsRouter);
 app.use('/api/projects/:projectId/sync', syncRouter);
 
+// Root route (API Info & Status)
+app.get('/', (req, res) => {
+  res.json({
+    service: 'Crawler & AI Bot Watch API',
+    status: 'online',
+    health: '/api/health',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Bot signatures list (for frontend dropdowns)
 app.get('/api/bot-signatures', (req, res) => {
   res.json(require('./config/botSignatures.json'));
