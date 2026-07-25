@@ -23,9 +23,28 @@ app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(compression());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like server-to-server or curl) or matching origins
+      if (!origin) return callback(null, true);
+      const allowedOrigins = [
+        process.env.FRONTEND_URL,
+        'https://ai-crawler-and-bot-tracker.onrender.com',
+        'http://localhost:5173',
+        'http://localhost:3000',
+      ].filter(Boolean);
+
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.endsWith('.onrender.com') ||
+        process.env.NODE_ENV !== 'production'
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   })
 );
 app.use(morgan('dev'));
