@@ -1,0 +1,30 @@
+services:
+  # ─── 1. Backend Web Service ───────────────────────────────────────────────
+  - type: web
+    name: ai-crawler-bot-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: ./data/crawler-watch.db
+      - key: FRONTEND_URL
+        sync: false # Set to your deployed frontend URL e.g. https://ai-crawler-bot-frontend.onrender.com
+
+  # ─── 2. Frontend Static Site ──────────────────────────────────────────────
+  - type: web
+    name: ai-crawler-bot-frontend
+    env: static
+    rootDir: Crawler-bot
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false # Set to your deployed backend URL e.g. https://ai-crawler-bot-backend.onrender.com
